@@ -1,7 +1,5 @@
 import os
 
-import requests
-
 from engine.exceptions import WrongRobotsFormatError
 from engine.index import SearchIndex
 from engine.query_generator import SearchQueryGenerator
@@ -28,7 +26,8 @@ class SearchEngine:
         with open(f'{os.getcwd()}/{robots_file}',
                   encoding='UTF-8') as file:
             for line in file.readlines():
-                if len(line.split()) > 2 or '-' not in line and '+' not in line:
+                if len(line.split()) > 2 or \
+                        '-' not in line and '+' not in line:
                     raise WrongRobotsFormatError('Wrong robots.txt format')
                 char, page_url = line.replace('\n', '').split()
                 if char == '-':
@@ -50,24 +49,10 @@ class SearchEngine:
         self.index.create()
 
     def handle_query(self, text_query: str) -> list:
-        return self.make_format_response(self
-                                         .query_generator
-                                         .handle_query(text_query))
+        return self.query_generator.handle_query(text_query)
 
     def change_url(self, url: str):
         self.parser.change_url(url)
         self.index.change_url()
 
         self.index.load_index()
-
-    def make_format_response(self, results: list) -> list:
-        response = []
-        for result in results:
-            try:
-                title, text = self.parser.get_info(result)
-            except requests.exceptions.ConnectionError:
-                continue
-            response.append({'title': title,
-                             'text': text,
-                             'href': result})
-        return response

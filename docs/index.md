@@ -4,4 +4,3 @@
 - ### [parser](parser/index.md)
 - ### [query_generator](query_generator/index.md)
 - ### [utils](utils/index.md)
-- ### [frontend](frontend/index.md)

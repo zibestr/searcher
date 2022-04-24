@@ -76,19 +76,6 @@ class Parser:
         elif content.status_code == 404:
             return Response()
         else:
-            raise PageNotAvailableError('Parsed page is not available. HTTP code: ' + str(content.status_code))
-
-    def get_info(self, url: str) -> (str, str):
-        content = self.status_code_handler(url)
-        soup = BeautifulSoup(content.text, 'html.parser')
-        title = soup.find('title').get_text()
-        tag = soup.find('meta', attrs={'name': 'description'})
-        if tag is not None:
-            text = tag.get('content') + ' ...'
-        else:
-            words = soup.get_text('').strip().split()
-            try:
-                text = ' '.join(words[:25])
-            except IndexError:
-                text = ' '.join(words)
-        return title, text
+            raise PageNotAvailableError('Parsed page is not available. '
+                                        'HTTP code: '
+                                        + str(content.status_code))

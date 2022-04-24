@@ -16,6 +16,8 @@ load_dotenv(dotenv_path=env_path)
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 URL = os.getenv('URL')
+IP = os.getenv('IP')
+PORT = int(os.getenv('PORT'))
 
 
 app = Flask(__name__)
@@ -47,7 +49,9 @@ class ChangeUrl(Resource):
         return jsonify(engine.parser.main_url)
 
 
+api.add_resource(SearchApi, '/api/search/<string:text>')
+api.add_resource(ChangeUrl, '/api/change')
+
+
 if __name__ == '__main__':
-    api.add_resource(SearchApi, '/api/search/<string:text>')
-    api.add_resource(ChangeUrl, '/api/change')
-    app.run(port=5000, host='127.0.0.1')
+    app.run(port=PORT, host=IP)
